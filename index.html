@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Zakat Pendapatan</title>
+    <style>
+        .zakat-container {
+            max-width: 500px;
+            margin: auto;
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .zakat-container h2 {
+            color: #333;
+            text-align: center;
+        }
+        .zakat-container label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .zakat-container input {
+            display: block;
+            width: 100%;
+            max-width: 375px;
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        .zakat-container .section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f1f1f1;
+            border-radius: 5px;
+        }
+        .zakat-container button {
+            background: #28a745;
+            color: white;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            border-radius: 3px;
+        }
+        .zakat-container button:hover {
+            background: #218838;
+        }
+        .zakat-container .result {
+            margin-top: 20px;
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+            padding: 10px;
+            background: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="zakat-container">
+        <h2>Kalkulator Zakat Pendapatan</h2>
+        
+        <div class="section">
+            <h3>A: Komponen Pendapatan</h3>
+            <label for="salary">A1. Gaji Kasar, Pencen, Bonus (Setahun) (RM):</label>
+            <input type="number" id="salary" value="0">
+            
+            <label for="freelance">A2. Pendapatan Freelance, Agent, Konsultant (Setahun) (RM):</label>
+            <input type="number" id="freelance" value="0">
+            
+            <label for="gift">A3. Pendapatan Dari Pemberian & Hadiah (Setahun) (RM):</label>
+            <input type="number" id="gift" value="0">
+            
+            <label for="rental">A4. Hasil Al-Mustaghallat (Sewaan Rumah, Kenderaan, Premis) (Setahun) (RM):</label>
+            <input type="number" id="rental" value="0">
+        </div>
+        
+        <div class="section">
+            <h3>B1: Had Kifayah Isi Rumah</h3>
+            <label for="household">Jumlah Had Kifayah Isi Rumah (RM):</label>
+            <input type="number" id="household" value="0">
+        </div>
+        
+        <div class="section">
+            <h3>B2: Had Kifayah Tambahan</h3>
+            <label for="b2">Jumlah Had Kifayah Tambahan (RM):</label>
+            <input type="number" id="b2" value="0">
+        </div>
+        
+        <div class="section">
+            <h3>C: Tolakan Lain</h3>
+            <label for="epf">C1. Caruman KWSP bahagian pekerja di bawah umur 55 tahun (setahun) (RM):</label>
+            <input type="number" id="epf" value="0">
+        </div>
+        
+        <button id="calculate">Kira Zakat</button>
+        <div class="result" id="result">Jumlah Zakat Pendapatan Anda (Setahun): RM 0.00</div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('calculate').addEventListener('click', function() {
+                let salary = parseFloat(document.getElementById('salary').value) || 0;
+                let freelance = parseFloat(document.getElementById('freelance').value) || 0;
+                let gift = parseFloat(document.getElementById('gift').value) || 0;
+                let rental = parseFloat(document.getElementById('rental').value) || 0;
+                let household = parseFloat(document.getElementById('household').value) || 0;
+                let b2 = parseFloat(document.getElementById('b2').value) || 0;
+                let epf = parseFloat(document.getElementById('epf').value) || 0;
+                
+                let totalIncome = salary + freelance + gift + rental;
+                let netIncome = totalIncome - (household + b2 + epf);
+                let zakat = netIncome > 0 ? netIncome * 0.025 : 0;
+                
+                let resultText = "Jumlah Zakat Pendapatan Anda (Setahun): RM " + zakat.toFixed(2);
+                if (zakat <= 0) {
+                    resultText += "<br>Anda tidak diwajibkan zakat.";
+                }
+                document.getElementById('result').innerHTML = resultText;
+            });
+        });
+    </script>
+</body>
+</html>
