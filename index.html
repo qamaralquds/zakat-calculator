@@ -49,65 +49,51 @@
             width: 100%;
             font-size: 16px;
             border-radius: 3px;
+            margin-top: 10px;
         }
         .zakat-container button:hover {
             background: #218838;
         }
-        .zakat-container .result {
-            margin-top: 20px;
-            font-weight: bold;
-            color: #333;
-            text-align: center;
-            padding: 10px;
-            background: #f9f9f9;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
     </style>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            function populateDropdown(id, max) {
-                let select = document.getElementById(id);
-                if (select) {
-                    select.innerHTML = "";
-                    for (let i = 0; i <= max; i++) {
-                        let option = document.createElement("option");
-                        option.value = i;
-                        option.text = i;
-                        select.appendChild(option);
-                    }
-                }
-            }
-            
-            ["b1_2", "b1_3", "b1_4", "b1_5", "b1_6", "b2_1", "b2_2", "b2_3"].forEach(id => populateDropdown(id, 10));
-
             function calculateTotals() {
                 let totalA = ["salary", "freelance", "gift", "rental"].reduce((sum, id) => sum + parseFloat(document.getElementById(id)?.value || 0), 0);
                 document.getElementById("totalA").value = totalA;
                 
-                let totalB1 = 14580 +
-                              parseInt(document.getElementById("b1_2")?.value || 0) * 4944 +
-                              parseInt(document.getElementById("b1_3")?.value || 0) * 2004 +
-                              parseInt(document.getElementById("b1_4")?.value || 0) * 7356 +
-                              parseInt(document.getElementById("b1_5")?.value || 0) * 4896 +
-                              parseInt(document.getElementById("b1_6")?.value || 0) * 2100;
+                let valuesB1 = [14580, 4944, 2004, 7356, 4896, 2100];
+                let totalB1 = valuesB1.reduce((sum, value, index) => sum + (parseInt(document.getElementById(`b1_${index}`)?.value || 0) * value), 0);
                 document.getElementById("totalB1").value = totalB1;
                 
-                let totalB2 = parseInt(document.getElementById("b2_1")?.value || 0) * 2964 +
-                              parseInt(document.getElementById("b2_2")?.value || 0) * 3960 +
-                              parseInt(document.getElementById("b2_3")?.value || 0) * 2916;
+                let valuesB2 = [2964, 3960, 2916];
+                let totalB2 = valuesB2.reduce((sum, value, index) => sum + (parseInt(document.getElementById(`b2_${index}`)?.value || 0) * value), 0);
                 document.getElementById("totalB2").value = totalB2;
-                
+
                 let totalC = parseFloat(document.getElementById("kwsp")?.value || 0);
                 document.getElementById("totalC").value = totalC;
                 
                 let totalD = totalA - (totalB1 + totalB2 + totalC);
                 document.getElementById("totalD").value = totalD;
+
+let zakatMessage = document.getElementById("zakatMessage");
+                if (totalD < 0) {
+                    zakatMessage.textContent = "Anda tidak diwajibkan zakat.";
+                } else {
+                    zakatMessage.textContent = "";
+                }
             }
             
-            document.querySelectorAll("input, select").forEach(element => {
+            function resetForm() {
+                document.querySelectorAll("input").forEach(input => input.value = 0);
+                document.querySelectorAll("select").forEach(select => select.value = 0);
+                calculateTotals();
+            }
+
+            document.querySelectorAll("select, input").forEach(element => {
                 element.addEventListener("input", calculateTotals);
             });
+            
+            document.getElementById("reset").addEventListener("click", resetForm);
             
             calculateTotals();
         });
@@ -116,7 +102,6 @@
 <body>
     <div class="zakat-container">
         <h2>Kalkulator Zakat Pendapatan</h2>
-        
         <div class="section">
             <h3>A: Komponen Pendapatan</h3>
             <label for="salary">Gaji Kasar, Pencen, Bonus (Setahun) (RM):</label>
@@ -130,11 +115,70 @@
             <label for="totalA">Jumlah A:</label>
             <input type="number" id="totalA" readonly>
         </div>
+      <div class="section">
+            <h3>B1: Had Kifayah Isi Rumah</h3>
+            <label>Diri Sendiri: RM14,580/Tahun</label>
+            <input type="number" id="b1_0" value="1" readonly>
+            
+            <label>Dewasa Bekerja</label>
+            <select id="b1_1"></select>
+            
+            <label>Dewasa Tidak Bekerja</label>
+            <select id="b1_2"></select>
+            
+            <label>Tanggungan Belajar IPT</label>
+            <select id="b1_3"></select>
+            
+            <label>Tanggungan Berumur 7-17 tahun</label>
+            <select id="b1_4"></select>
+            
+            <label>Tanggungan 6 Tahun Ke Bawah</label>
+            <select id="b1_5"></select>
+            
+            <label for="totalB1">Jumlah B1:</label>
+            <input type="number" id="totalB1" readonly>
+        </div>
         
+        <div class="section">
+            <h3>B2: Had Kifayah Tambahan</h3>
+            <label>Tanggungan Anak OKU</label>
+            <select id="b2_0"></select>
+            
+            <label>Kos Penjagaan Anak</label>
+            <select id="b2_1"></select>
+            
+            <label>Tanggungan Pesakit Kronik</label>
+            <select id="b2_2"></select>
+            
+            <label for="totalB2">Jumlah B2:</label>
+            <input type="number" id="totalB2" readonly>
+        </div>
+        <div class="section">
+            <h3>C: Caruman KWSP</h3>
+            <label for="kwsp">Caruman KWSP bahagian pekerja di bawah umur 55 tahun (setahun) (RM):</label>
+            <input type="number" id="kwsp" value="0">
+            <label for="totalC">Jumlah C:</label>
+            <input type="number" id="totalC" readonly>
+        </div>
         <div class="section">
             <h3>D: Jumlah Bahagian (A - (B1 + B2 + C))</h3>
             <input type="number" id="totalD" readonly>
+<p id="zakatMessage" style="color: red; font-weight: bold;"></p>
         </div>
+        <button id="reset">Reset</button>
     </div>
+<script>
+        function populateDropdowns() {
+            document.querySelectorAll("select").forEach(select => {
+                for (let i = 0; i <= 10; i++) {
+                    let option = document.createElement("option");
+                    option.value = i;
+                    option.textContent = i;
+                    select.appendChild(option);
+                }
+            });
+        }
+        populateDropdowns();
+    </script>
 </body>
 </html>
