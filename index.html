@@ -81,6 +81,8 @@ let zakatMessage = document.getElementById("zakatMessage");
                 } else {
                     zakatMessage.textContent = "";
                 }
+let zakatAmount = totalD * 0.025;
+                document.getElementById("jumlahZakat").value = zakatAmount.toFixed(2);
             }
             
             function resetForm() {
@@ -163,7 +165,11 @@ let zakatMessage = document.getElementById("zakatMessage");
         <div class="section">
             <h3>D: Jumlah Bahagian (A - (B1 + B2 + C))</h3>
             <input type="number" id="totalD" readonly>
-<p id="zakatMessage" style="color: red; font-weight: bold;"></p>
+        </div>
+<div class="section">
+            <h3>Jumlah Zakat Anda Setahun</h3>
+            <input type="number" id="jumlahZakat" readonly>
+  <p id="zakatMessage" style="color: red; font-weight: bold;"></p>
         </div>
         <button id="reset">Reset</button>
     </div>
